@@ -3,233 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesca Orçamento 2026</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
-        header { background: #f4f4f4; padding: 10px; text-align: center; }
-    </style>
+    <title>Elementos de Despesas | SEVIG 2026</title>
+    <link rel="stylesheet" href="style1.css">
 </head>
+
 <body>
 
-    <header>
+<header>
+    <div class="container">
         <h1>Elementos de Despesas</h1>
-    </header>
-    <div class="navegacao">
-    <a href="file:///c:/Users/edmilson.alcantara/Documents/2026/Pesca2026/index.html" class="btn-voltar">Voltar</a>
     </div>
-    <style>
-        .navegacao {
-    display: flex;          /* Ativa o modo flexbox */
-    justify-content: flex-end; /* Alinha o conteúdo ao final (direita) */
-    padding: 10px 0;        /* Adiciona um espaço em cima e embaixo */
-}
+</header>
 
-.btn-voltar {
-    text-decoration: none;  /* Remove o sublinhado padrão */
-    color: #007BFF;         /* Cor azul padrão de links */
-    font-weight: bold;
-}
+<main class="container">
 
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        
-        /* Estilização da Tabela */
-        table {
-            width: 100%;
-            border-collapse: collapse; /* Une as bordas das células */
-            margin-top: 20px;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-        
-        th {
-            background-color: #0F7B5B;
-            color: white;
-        }
+    <div class="navegacao">
+        <a href="index.html" class="btn btn-secundario">← Início</a>
+    </div>
 
-        /* Estilo para a fonte 1.500 (Azul Escuro) */
-        .fonte-1500 {
-        background-color: #afd2f5; /* Azul marinho/escuro */
-        color: rgb(7, 7, 7);              /* Texto branco para leitura */
-        font-weight: bold;
-        text-align: left;
-                        }          
-
-        /* Estilo para a fonte 1.659 (Verde Escuro) */
-        .fonte-1659 {
-        background-color: #cff9cf; /* Verde floresta/escuro */
-        color: rgb(5, 5, 5);              /* Texto branco para leitura */
-        font-weight: bold;
-        text-align: left;
-        }
-
-        /* Efeito de cor alternada nas linhas (Zebra) */
-        tr:nth-child(even) { background-color: #f2f2f2; }
-        
-        /* Efeito ao passar o mouse */
-        tr:hover { background-color: #ddd; }
-
-        
-    </style>
-</head>
-<body>
-
-    <main>
-            <h3></h3>
-            <h4 style="color: red;"></h4>
-                  
-        <div style="overflow-x:auto;"> <table>
+    <section class="tabela-container">
+        <h2>Relação de Elementos</h2>
+        <div class="table-wrapper">
+            <table>
                 <thead>
                     <tr>
-                        <th>Código Elemento (siscovep)</th>
+                        <th>Código (SISCOVEP)</th>
                         <th>Elemento</th>
-                        <th>Nome Elemento</th>
-                    
+                        <th>Nome do Elemento</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>8</td>
-                        <td>319011</td>
-                        <td>Vencimentos e Vantagens Fixas - Pessoal Civil</td>
-                <tbody>
-                    <tr>
-                        <td>40</td>
-                        <td>339014</td>
-                        <td>Diárias - Civil</td>
-                <tbody>
-                    <tr>
-                        <td>44</td>
-                        <td>339030</td>
-                        <td>Material de Consumo</td>
-                <tbody>
-                    <tr>
-                        <td>46</td>
-                        <td>339032</td>
-                        <td>Material, bem ou serviço para distribuição</td>
-                <tbody>
-                    <tr>
-                        <td>47</td>
-                        <td>339033</td>
-                        <td>Passagens e despesas com locomoção</td>   
-                <tbody>
-                    <tr>
-                        <td>48</td>
-                        <td>339034</td>
-                        <td>Outras despesas de pessoal decorrente de Contratos de Terceirização</td>
-                <tbody>
-                    <tr>
-                        <td>50</td>
-                        <td>339036</td>
-                        <td>Outros Serviços de Terceiros - Pessoa Física</td>
-                <tbody>
-                    <tr>
-                        <td>51</td>
-                        <td>339037</td>
-                        <td>Locação de Mão-de-Obra</td> 
-                <tbody>
-                    <tr>
-                        <td>52</td>
-                        <td>339039</td>
-                        <td>Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                <tbody>
-                    <tr>
-                        <td>64</td>
-                        <td>339139</td>
-                        <td>Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                <tbody>
-                    <tr>
-                        <td>109</td>
-                        <td>339040</td>
-                        <td>Serviços de Tecnologia da Informação e Comunicação – Pessoa Jurídica</td>
-                <tbody>
-                    <tr>
-                        <td>56</td>
-                        <td>339047</td>
-                        <td>Obrigações Tributárias e Contributivas</td>
-                <tbody>
-                    <tr>
-                        <td>60</td>
-                        <td>339092</td>
-                        <td>Despesas de Exercícios Anteriores</td>
-                <tbody>
-                    <tr>
-                        <td>61</td>
-                        <td>339093</td>
-                        <td>Indenizações e Restituições</td> 
-                <tbody>
-                    <tr>
-                        <td>89</td>
-                        <td>449051</td>
-                        <td>Obras e Instalações</td>
-                <tbody>
-                    <tr>
-                        <td>90</td>
-                        <td>449052</td>
-                        <td>Equipamentos e Material Permanente</td>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>       
-                </thead>
-                
-                            
-
-            <div style="overflow-x:auto;"> <table>
-             <!--   <thead>
-                    <tr>
-                        <th>Elemento</th>
-                        <th>Fonte</th>
-                        <th>Dotação</th>
-                                                
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>339014</td>
-                        <td>1.600</td>
-                        <td>20910</td>
-                    </tr>
-                    <tr>
-                        <td>339030</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td>21212</td>
-                                              
-                    </tr>
-                    <tr>
-                        <td>339039</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td>27531</td>
-                                              
-                    </tr>
-                    <tr>
-                        <td>339039</td>
-                        <td>1.600</td>
-                        <td>57303</td>
-                                              
-                    </tr>
-                    <tr>
-                        <td>339139</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td>58563</td>
-                                           
-                                                         
-                    </tr> -->
+                    <tr><td>8</td><td>319011</td><td>Vencimentos e Vantagens Fixas - Pessoal Civil</td></tr>
+                    <tr><td>40</td><td>339014</td><td>Diárias - Civil</td></tr>
+                    <tr><td>44</td><td>339030</td><td>Material de Consumo</td></tr>
+                    <tr><td>46</td><td>339032</td><td>Material, Bem ou Serviço para Distribuição</td></tr>
+                    <tr><td>47</td><td>339033</td><td>Passagens e Despesas com Locomoção</td></tr>
+                    <tr><td>48</td><td>339034</td><td>Outras Despesas de Pessoal Decorrente de Contratos de Terceirização</td></tr>
+                    <tr><td>50</td><td>339036</td><td>Outros Serviços de Terceiros - Pessoa Física</td></tr>
+                    <tr><td>51</td><td>339037</td><td>Locação de Mão-de-Obra</td></tr>
+                    <tr><td>52</td><td>339039</td><td>Outros Serviços de Terceiros - Pessoa Jurídica</td></tr>
+                    <tr><td>64</td><td>339139</td><td>Outros Serviços de Terceiros - Pessoa Jurídica</td></tr>
+                    <tr><td>109</td><td>339040</td><td>Serviços de Tecnologia da Informação e Comunicação – Pessoa Jurídica</td></tr>
+                    <tr><td>56</td><td>339047</td><td>Obrigações Tributárias e Contributivas</td></tr>
+                    <tr><td>60</td><td>339092</td><td>Despesas de Exercícios Anteriores</td></tr>
+                    <tr><td>61</td><td>339093</td><td>Indenizações e Restituições</td></tr>
+                    <tr><td>89</td><td>449051</td><td>Obras e Instalações</td></tr>
+                    <tr><td>90</td><td>449052</td><td>Equipamentos e Material Permanente</td></tr>
                 </tbody>
             </table>
         </div>
-    </main>
+    </section>
 
-</body>
+</main>
 
-    <footer>
-        <p>&copy; 2026 - Criado por @Junior Alcantara</p>
-    </footer>
+<footer>
+    <div class="container">
+        &copy; 2026 - Junior Alcantara
+    </div>
+</footer>
 
 </body>
 </html>
