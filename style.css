@@ -1,0 +1,138 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    padding: 30px;
+}
+
+.box {
+    max-width: 450px;
+    margin: auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #004a99;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input,
+textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px;
+    background: #004a99;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.resultado {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.card {
+    padding: 12px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.corridos {
+    background: #555;
+    grid-column: span 2;
+}
+
+.uteis {
+    background: #2e7d32;
+}
+
+.feriados {
+    background: #ff9800;
+}
+
+.sabados {
+    background: #795548;
+}
+
+.domingos {
+    background: #d32f2f;
+}
+
+.lista-feriados {
+    margin-top: 20px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.lista-feriados h3 {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #333;
+}
+
+.lista-feriados ul {
+    padding-left: 18px;
+}
+
+.lista-feriados li {
+    margin-bottom: 4px;
+}
+.navegacao {
+    display: flex;          /* Ativa o modo flexbox */
+    justify-content: flex-end; /* Alinha o conteúdo ao final (direita) */
+    padding: 10px 0;        /* Adiciona um espaço em cima e embaixo */
+}
+
+.btn-voltar {
+    text-decoration: none;  /* Remove o sublinhado padrão */
+    color: #007BFF;         /* Cor azul padrão de links */
+    font-weight: bold;
+}
+
+.btn-limpar {
+    margin-top: 8px;
+    background: #9e9e9e;
+}
+
+.btn-limpar:hover {
+    opacity: 0.9;
+}

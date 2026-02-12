@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Análise de Prazo</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="navegacao">
+    <a href="index.html" class="btn-voltar">Voltar</a>
+</div>
+
+<div class="box">
+    <h2>📅 Análise de Prazo</h2>
+
+    <label for="inicio">Início do Período:</label>
+    <input type="date" id="inicio">
+
+    <label for="fim">Fim do Período:</label>
+    <input type="date" id="fim">
+
+    <label for="feriados">Feriados locais / não oficiais:</label>
+    <textarea id="feriados" placeholder="Ex: 2026-02-10, 2026-02-24"></textarea>
+
+    <button onclick="analisar()">Analisar Período</button>
+
+    
+    <div class="resultado">
+        <div class="card corridos" id="diasCorridos">DIAS CORRIDOS<br>0</div>
+        <div class="card uteis" id="diasUteis">DIAS ÚTEIS<br>0</div>
+        <div class="card feriados" id="totalFeriados">FERIADOS<br>0</div>
+        <div class="card sabados" id="sabados">SÁBADOS<br>0</div>
+        <div class="card domingos" id="domingos">DOMINGOS<br>0</div>
+    </div>
+
+    <button class="btn-limpar" onclick="limpar()">Limpar Dados</button>
+
+    <div class="lista-feriados">
+        <h3>📌 Feriados considerados no período</h3>
+        <ul id="listaFeriados">
+            <li>Nenhum feriado no período</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

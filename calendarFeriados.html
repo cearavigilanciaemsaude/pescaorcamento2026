@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Prazos - Projeto SEVIG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #004a99; 
+            --bg: #f4f4f4; 
+            --verde: #2e7d32; 
+            --vermelho: #d32f2f; 
+            --feriado: #ff9800; /* Laranja conforme definido no calendário */
+            --sabado: #795548;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        /* Navegação superior */
+        .navegacao-container { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            padding: 10px 20px; 
+            box-sizing: border-box;
+        }
+        .btn-link { 
+            text-decoration: none; 
+            color: #333; 
+            font-weight: bold; 
+            font-size: 0.9rem; 
+            margin-bottom: 5px;
+        }
+
+        /* Container da Calculadora */
+        .calc-container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 400px; 
+            border-top: 6px solid var(--primary); 
+            margin-bottom: 50px;
+        }
+
+        h2 { color: var(--primary); text-align: center; margin-top: 0; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #444; }
+        input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-family: inherit;
+        }
+
+        /* Área de Feriados */
+        .feriados-input {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff8e1;
+            border-radius: 5px;
+            border: 1px dashed #ffb300;
+            margin-bottom: 20px;
+        }
+        .feriados-input label { color: #856404; }
+        textarea { font-size: 0.8rem; resize: vertical; }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            transition: background 0.3s;
+        }
+        button:hover { background: #003366; }
+
+        /* Grid de Resultados */
+        .resultado-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-top: 25px; 
+            display: none; /* Escondido até calcular */
+        }
+        
+        .res-item { 
+            padding: 12px; 
+            border-radius: 6px; 
+            text-align: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.85rem; 
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .corridos { background: #555; grid-column: span 2; font-size: 1.1rem; }
+        .uteis { background: var(--verde); }
+        .feriados { background: var(--feriado); }
+        .sabados { background: var(--sabado); }
+        .domingos { background: var(--vermelho); }
+
+    </style>
+</head>
+<body>
+
+    <div class="navegacao-container">
+        <a href="index.html" class="btn-link"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <a href="#" class="btn-link">Seguir <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="calc-container">
+        <h2><i class="fas fa-calendar-check"></i> Análise de Prazo</h2>
+        
+        <div class="input-group">
+            <label>Início do Período:</label>
+            <input type="date" id="dataInicial">
+        </div>
+
+        <div class="input-group">
+            <label>Fim do Período:</label>
+            <input type="date" id="dataFinal">
+        </div>
+
+        <div class="feriados-input">
+            <label><i class="fas fa-map-marker-alt"></i> Feriados Locais/Nacionais:</label>
+            <textarea id="listaFeriados" rows="3" placeholder="Ex: 2026-01-01, 2026-01-20"></textarea>
+            <small style="font-size: 0.7rem; color: #666;">Formato: AAAA-MM-DD (separe por traço ou hífen)</small>
+        </div>
+
+        <button onclick="analisarDatas()">Analisar Período</button>
+
+        <div id="resultadoGrid" class="resultado-grid">
+            <div class="res-item corridos" id="resCorridos"></div>
+            <div class="res-item uteis" id="resUteis"></div>
+            <div class="res-item feriados" id="resFeriados"></div>
+            <div class="res-item sabados" id="resSabados"></div>
+            <div class="res-item domingos" id="resDomingos"></div>
+        </div>
+    </div>
+
+    <script>
+        function analisarDatas() {
+            const d1Input = document.getElementById('dataInicial').value;
+            const d2Input = document.getElementById('dataFinal').value;
+            const feriadosTexto = document.getElementById('listaFeriados').value;
+            
+            if (!d1Input || !d2Input) {
+                alert("Por favor, selecione as datas de início e fim.");
+                return;
+            }
+
+            // Converter feriados para um array limpo
+            const feriadosArray = feriadosTexto.split(',')
+                                  .map(f => f.trim())
+                                  .filter(f => f !== "");
+
+            let dataInicio = new Date(d1Input + 'T00:00:00');
+            let dataFim = new Date(d2Input + 'T00:00:00');
+
+            if (dataFim < dataInicio) {
+                alert("A data final não pode ser menor que a data inicial.");
+                return;
+            }
+
+            let corridos = 0, uteis = 0, sabados = 0, domingos = 0, totalFeriados = 0;
+            let dataAtual = new Date(dataInicio);
+
+            while (dataAtual <= dataFim) {
+                corridos++;
+                let diaSemana = dataAtual.getDay(); // 0: Dom, 6: Sab
+                let dataFormatada = dataAtual.toISOString().split('T')[0];
+                
+                let ehFeriado = feriadosArray.includes(dataFormatada);
+
+                if (ehFeriado) {
+                    totalFeriados++;
+                }
+
+                if (diaSemana === 0) {
+                    domingos++;
+                } else if (diaSemana === 6) {
+                    sabados++;
+                } else if (!ehFeriado) {
+                    uteis++;
+                }
+
+                dataAtual.setDate(dataAtual.getDate() + 1);
+            }
+
+            // Exibir a grid de resultados
+            const grid = document.getElementById('resultadoGrid');
+            grid.style.display = 'grid';
+
+            document.getElementById('resCorridos').innerHTML = `<span>DIAS CORRIDOS</span><strong>${corridos}</strong>`;
+            document.getElementById('resUteis').innerHTML = `<span>DIAS ÚTEIS</span><strong>${uteis}</strong>`;
+            document.getElementById('resFeriados').innerHTML = `<span>FERIADOS</span><strong>${totalFeriados}</strong>`;
+            document.getElementById('resSabados').innerHTML = `<span>SÁBADOS</span><strong>${sabados}</strong>`;
+            document.getElementById('resDomingos').innerHTML = `<span>DOMINGOS</span><strong>${domingos}</strong>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decretos Orçamentários</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+        .card {
+    display: flex;
+    flex-direction: column; /* Coloca o ícone acima do texto */
+    align-items: center;    /* Centraliza horizontalmente */
+    justify-content: center;/* Centraliza verticalmente */
+    gap: 15px;             /* Espaço entre o ícone e o nome */
+    /* ... seus outros estilos de card ... */
+}
+
+.card i {
+    font-size: 2rem;       /* Deixa o ícone maior e visível */
+    color: var(--primary); /* Usa o azul padrão do SEVIG */
+}
+
+.card:hover i {
+    color: white;          /* Muda a cor do ícone no hover para branco */
+}
+
+        :root {
+            --primary: #004a99;
+            --bg-gray: #f4f4f4;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-gray);
+            color: #333;
+        }
+
+        /* Cabeçalho inspirado na sua imagem */
+        header {
+            
+            background-color: #eeeeee; /* Tom cinza claro da imagem */
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.0rem;
+            color: #000;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        /* Grid de Cards */
+        .grid-coordenacoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 5px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background-color: var(--primary);
+            color: white;
+        }
+
+        footer {
+            text-align: left;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Decretos Orçamentários de 2026 - Calendário</h1>
+    </header>
+
+    <div class="container"> 
+        
+        <div class="grid-coordenacoes">
+            <a href="janeiro.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Janeiro</a>
+            <a href="fevereiro.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Fevereiro</a>
+            <a href="marco.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Março</a>
+            <a href="abril.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Abril</a>
+            <a href="maio.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Maio</a>
+            <a href="junho.html" class="card">
+                <i class="fa-regular fa-calendar-days"></i>Junho</a>    
+            <a href="index.html" class="card">
+                <i class="fa-solid fa-rotate-left"></i>Voltar</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 - Junior Alcantara
+    </footer>
+
+</body>
+</html>
