@@ -121,12 +121,18 @@ function obterFeriadosNacionais(ano) {
     const feriados = [];
 
     feriados.push({ data: `${ano}-01-01`, nome: "Confraternização Universal" });
+    feriados.push({ data: `${ano}-03-19`, nome: "Dia de São José (Feriado Estadual)" });
+    feriados.push({ data: `${ano}-03-25`, nome: "Data Magna do Ceará (Feriado Estadual)" });
+    feriados.push({ data: `${ano}-04-13`, nome: "Aniversário de Fortaleza (Feriado Municipal)" });
     feriados.push({ data: `${ano}-04-21`, nome: "Tiradentes" });
     feriados.push({ data: `${ano}-05-01`, nome: "Dia do Trabalho" });
+    feriados.push({ data: `${ano}-08-15`, nome: "N.Sra. da Assunção (Feriado Municipal)" });
     feriados.push({ data: `${ano}-09-07`, nome: "Independência do Brasil" });
     feriados.push({ data: `${ano}-10-12`, nome: "Nossa Senhora Aparecida" });
+    feriados.push({ data: `${ano}-10-28`, nome: "Dia do Servidor Público" });
     feriados.push({ data: `${ano}-11-02`, nome: "Finados" });
     feriados.push({ data: `${ano}-11-15`, nome: "Proclamação da República" });
+    feriados.push({ data: `${ano}-11-20`, nome: "Consciência Negra" });
     feriados.push({ data: `${ano}-12-25`, nome: "Natal" });
 
     const pascoa = calcularPascoa(ano);
