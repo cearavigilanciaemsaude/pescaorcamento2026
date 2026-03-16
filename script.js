@@ -123,7 +123,6 @@ function obterFeriadosNacionais(ano) {
     feriados.push({ data: `${ano}-01-01`, nome: "Confraternização Universal" });
     feriados.push({ data: `${ano}-03-19`, nome: "Dia de São José (Feriado Estadual)" });
     feriados.push({ data: `${ano}-03-25`, nome: "Data Magna do Ceará (Feriado Estadual)" });
-    feriados.push({ data: `${ano}-04-13`, nome: "Aniversário de Fortaleza (Feriado Municipal)" });
     feriados.push({ data: `${ano}-04-21`, nome: "Tiradentes" });
     feriados.push({ data: `${ano}-05-01`, nome: "Dia do Trabalho" });
     feriados.push({ data: `${ano}-08-15`, nome: "N.Sra. da Assunção (Feriado Municipal)" });
