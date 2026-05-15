@@ -103,11 +103,11 @@
         tb.innerHTML = filtrados.length === 0
             ? '<tr><td colspan="3">Nenhum SACC encontrado.</td></tr>'
             : filtrados.map(s => {
-                const cls = `cat-${s.categoria || 'padrao'}`;
+                const cls = "";
                 return `<tr>
                     <td>${s.contrato}</td>
-                    <td class="${cls}">${s.objeto}</td>
-                    <td class="${cls}">${s.numero_sacc}</td>
+                    <td>${s.objeto}</td>
+                    <td><strong>${s.numero_sacc}</strong></td>
                 </tr>`;
             }).join('');
         document.getElementById('contador-saccs').textContent = `${filtrados.length} de ${todosSaccs.length} registros`;
