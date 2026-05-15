@@ -5,6 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orçamento CEAIM 2026</title>
     <link rel="stylesheet" href="style1.css">
+    <style>
+        .filtro-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .filtro-container label {
+            font-weight: bold;
+            color: var(--cor-primaria);
+        }
+        .filtro-container input {
+            padding: 7px 12px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 5px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 220px;
+        }
+        .filtro-container input:focus {
+            border-color: var(--cor-secundaria);
+        }
+        .filtro-fonte {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-fonte {
+            padding: 6px 14px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 20px;
+            background: white;
+            color: var(--cor-primaria);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .btn-fonte.ativo { background: var(--cor-primaria); color: white; }
+        .btn-fonte.ativo-1600 { background: var(--cor-primaria); border-color: var(--cor-primaria); color: white; }
+        .btn-fonte.ativo-1500 { background: #2980b9; border-color: #2980b9; color: white; }
+        .btn-fonte.ativo-1659 { background: #c0392b; border-color: #c0392b; color: white; }
+        .btn-fonte.ativo-2600 { background: #02551a; border-color: #02551a; color: white; }
+        #contador-elementos { font-size: 0.85rem; color: #888; margin-left: auto; }
+    </style>
 </head>
 
 <body>
@@ -21,15 +68,9 @@
         <a href="index.html" class="btn btn-secundario">← Voltar</a>
     </div>
 
-    <section class="bloco-informacoes">
-        
-        <h4 class="mapp">
-            MAPP - 2449042014 - Ações de Imunização no Estado do Ceará e 2449112019 Aquisição de seringas e agulhas para ações de imunização no Estado do Ceará (Seringas)
-        </h4>
-        <h3>
-            Ação - 20641 - ARMAZENAMENTO E DISTRIBUIÇÃO DOS IMUNOBIOLÓGICOS E INSUMOS 
-            ESTRATÉGICOS DO PROGRAMA DE IMUNIZAÇÃO
-        </h3>
+    <!-- INFORMAÇÕES MAPP/AÇÃO -->
+    <section class="bloco-informacoes" id="bloco-info">
+        <p style="color:#ccc;">Carregando...</p>
     </section>
 
     <!-- TABELA PF -->
@@ -43,27 +84,8 @@
                         <th>Descrição PF</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>2404010912024C</td>
-                        <td>PAGAMENTO DE MATERIAL DE CONSUMO - SEVISA (CEAIM)</td>
-                    </tr>
-                    <tr>
-                        <td>2404013602024C</td>
-                        <td>PAGAMENTO DE MATERIAL DE CONSUMO - SEVISA (CEAIM)</td>
-                    </tr>
-                    <tr>
-                        <td>2404013392024C</td>
-                        <td>PAGAMENTO DE PASSAGENS E DIÁRIAS - SEVISA (CEAIM)</td>
-                    </tr>
-                    <tr>
-                        <td>2404013282024C</td>
-                        <td>PAGAMENTO DE SERVIÇOS - SEVISA (CEAIM)</td>
-                    </tr>
-                    <tr>
-                        <td>2404010112025C</td>
-                        <td>PAGAMENTO DE CONTAS PÚBLICAS - SEVISA (CEAIM)</td>
-                    </tr>
+                <tbody id="tabela-pf">
+                    <tr><td colspan="2">Carregando...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -72,6 +94,20 @@
     <!-- TABELA ELEMENTOS -->
     <section class="tabela-container">
         <h2>Elementos e Dotações</h2>
+
+        <div class="filtro-container">
+            <label>Pesquisar:</label>
+            <input type="text" id="filtro-texto" placeholder="Elemento ou dotação..." oninput="filtrar()">
+            <div class="filtro-fonte">
+                <button class="btn-fonte ativo" id="btn-todos" onclick="filtrarFonte('')">Todos</button>
+                <button class="btn-fonte" id="btn-1600" onclick="filtrarFonte('1.600')">1.600</button>
+                <button class="btn-fonte" id="btn-1500" onclick="filtrarFonte('1.500')">1.500</button>
+                <button class="btn-fonte" id="btn-1659" onclick="filtrarFonte('1.659')">1.659</button>
+                <button class="btn-fonte" id="btn-2600" onclick="filtrarFonte('2.600')">2.600</button>
+            </div>
+            <span id="contador-elementos"></span>
+        </div>
+
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -81,37 +117,8 @@
                         <th>Dotação</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>339014 - Diárias - Civil</td>
-                        <td>1.600</td>
-                        <td>20910</td>
-                    </tr>
-                    <tr>
-                        <td>339039 - Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                        <td>1.600</td>
-                        <td>57303</td>
-                    </tr>
-                    <tr>
-                        <td class="fonte-1500">339030 - Material de Consumo</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td class="fonte-1500">21212</td>
-                    </tr>
-                    <tr>
-                        <td class="fonte-1500">339039 - Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td class="fonte-1500">27531</td>
-                    </tr>
-                    <tr>
-                        <td class="fonte-1500">339139 - Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                        <td class="fonte-1500">1.500</td>
-                        <td class="fonte-1500">58563</td>
-                    </tr>    
-                    <tr>
-                        <td class="fonte-2600">339039 - Outros Serviços de Terceiros - Pessoa Jurídica</td>
-                        <td class="fonte-2600">2.600</td>
-                        <td class="fonte-2600">461396</td>    
-                    </tr>
+                <tbody id="tabela-elementos">
+                    <tr><td colspan="3">Carregando...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -124,6 +131,102 @@
         &copy; 2026 - Junior Alcantara
     </div>
 </footer>
+
+<script>
+    const SUPABASE_URL = 'https://uezaqoalbxbyzaimxpsb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_qDXNQda0NJkk1H60uaYG6A_4oOVF8yz';
+    const ACAO_ID = 7;
+
+    let todosElementos = [];
+    let fonteAtiva = '';
+
+    async function get(endpoint) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        return res.json();
+    }
+
+    function classesFonte(fonte) {
+        if (fonte === '1.659') return 'fonte-1659';
+        if (fonte === '1.500') return 'fonte-1500';
+        if (fonte === '2.600') return 'fonte-2600';
+        return '';
+    }
+
+    function filtrarFonte(fonte) {
+        fonteAtiva = fonte;
+        document.querySelectorAll('.btn-fonte').forEach(b => b.className = 'btn-fonte');
+        if (fonte === '') document.getElementById('btn-todos').classList.add('ativo');
+        else if (fonte === '1.600') document.getElementById('btn-1600').classList.add('ativo-1600');
+        else if (fonte === '1.500') document.getElementById('btn-1500').classList.add('ativo-1500');
+        else if (fonte === '1.659') document.getElementById('btn-1659').classList.add('ativo-1659');
+        else if (fonte === '2.600') document.getElementById('btn-2600').classList.add('ativo-2600');
+        filtrar();
+    }
+
+    function filtrar() {
+        const texto = document.getElementById('filtro-texto').value.toLowerCase();
+        const tb = document.getElementById('tabela-elementos');
+        const filtrados = todosElementos.filter(el => {
+            const matchFonte = fonteAtiva === '' || el.fonte === fonteAtiva;
+            const matchTexto = texto === '' || `${el.codigo} ${el.descricao} ${el.dotacao}`.toLowerCase().includes(texto);
+            return matchFonte && matchTexto;
+        });
+        tb.innerHTML = filtrados.length === 0
+            ? '<tr><td colspan="3">Nenhum elemento encontrado.</td></tr>'
+            : filtrados.map(el => {
+                const cls = classesFonte(el.fonte);
+                return `<tr>
+                    <td class="${cls}">${el.codigo} - ${el.descricao}</td>
+                    <td class="${cls}">${el.fonte}</td>
+                    <td class="${cls}">${el.dotacao}</td>
+                </tr>`;
+            }).join('');
+        document.getElementById('contador-elementos').textContent = `${filtrados.length} de ${todosElementos.length} elementos`;
+    }
+
+    async function carregar() {
+        try {
+            // Buscar ação
+            const acoes = await get(`acoes?id=eq.${ACAO_ID}`);
+            const acao = acoes[0];
+
+            // Buscar mapp principal
+            const mapps1 = await get(`mapps?id=eq.${acao.mapp_id}`);
+            const mapp1 = mapps1[0];
+
+            // Buscar mapp2 separadamente se existir
+            let mapp2html = '';
+            if (acao.mapp2_id) {
+                const mapps2 = await get(`mapps?id=eq.${acao.mapp2_id}`);
+                if (mapps2.length > 0) {
+                    mapp2html = ` e ${mapps2[0].codigo} - ${mapps2[0].descricao}`;
+                }
+            }
+
+            document.getElementById('bloco-info').innerHTML = `
+                <h4 class="mapp">MAPP - ${mapp1.codigo} - ${mapp1.descricao}${mapp2html}</h4>
+                <h3>Ação - ${acao.codigo} - ${acao.descricao}</h3>
+            `;
+            const pfs = await get(`projetos_finalisticos?acao_id=eq.${ACAO_ID}&order=codigo`);
+            const tbPf = document.getElementById('tabela-pf');
+            tbPf.innerHTML = pfs.length === 0
+                ? '<tr><td colspan="2">Nenhum PF cadastrado.</td></tr>'
+                : pfs.map(pf => `<tr><td>${pf.codigo}</td><td>${pf.descricao}</td></tr>`).join('');
+            todosElementos = await get(`elementos?acao_id=eq.${ACAO_ID}&order=fonte,codigo`);
+            filtrar();
+        } catch (err) {
+            console.error('Erro ao carregar dados:', err);
+            document.getElementById('bloco-info').innerHTML = '<p style="color:red;">Erro ao carregar dados.</p>';
+        }
+    }
+
+    carregar();
+</script>
 
 </body>
 </html>
