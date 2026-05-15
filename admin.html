@@ -594,21 +594,42 @@
 
     // ===================== SACC =====================
 
+    let saccEditandoId = null;
+
     async function carregarSaccs() {
-        const saccs = await get('saccs?order=contrato');
+        const saccs = await get('saccs?order=categoria,contrato');
         const lista = document.getElementById('lista-saccs');
         lista.innerHTML = saccs.length === 0 ? '<p style="color:#888">Nenhum SACC cadastrado.</p>' :
             saccs.map(s => `
                 <div class="lista-item">
                     <div class="lista-item-info">
                         <strong>${s.contrato} — ${s.numero_sacc}</strong>
-                        <small>${s.objeto}</small>
+                        <small>${s.objeto} | ${s.categoria || 'Outros'}</small>
                     </div>
-                    <button class="btn-excluir" onclick="excluir('saccs', ${s.id}, carregarSaccs)">
-                        <i class="fa-solid fa-trash"></i> Excluir
-                    </button>
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn-salvar" style="padding:6px 12px;font-size:0.85rem;" onclick="editarSacc(${s.id}, '${s.contrato.replace(/'/g,"\\'")}', '${s.objeto.replace(/'/g,"\\'")}', '${s.numero_sacc}', '${s.categoria || 'Outros'}')">
+                            <i class="fa-solid fa-pen"></i> Editar
+                        </button>
+                        <button class="btn-excluir" onclick="excluir('saccs', ${s.id}, carregarSaccs)">
+                            <i class="fa-solid fa-trash"></i> Excluir
+                        </button>
+                    </div>
                 </div>
             `).join('');
+    }
+
+    function editarSacc(id, contrato, objeto, numero_sacc, categoria) {
+        saccEditandoId = id;
+        document.getElementById('sacc-contrato').value = contrato;
+        document.getElementById('sacc-objeto').value = objeto;
+        document.getElementById('sacc-numero').value = numero_sacc;
+        document.getElementById('sacc-categoria').value = categoria;
+        const btn = document.querySelector('#tab-sacc .btn-salvar');
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Atualizar SACC';
+        btn.style.background = '#e67e22';
+        document.getElementById('sacc-contrato').focus();
+        document.getElementById('msg-sacc').textContent = 'Editando registro — clique em Atualizar para salvar.';
+        document.getElementById('msg-sacc').className = 'mensagem sucesso';
     }
 
     async function salvarSacc() {
@@ -617,12 +638,31 @@
         const numero_sacc = document.getElementById('sacc-numero').value.trim();
         const categoria = document.getElementById('sacc-categoria').value;
         if (!contrato || !objeto || !numero_sacc) return mostrarMensagem('msg-sacc', 'Preencha todos os campos.', 'erro');
-        await post('saccs', { contrato, objeto, numero_sacc, categoria });
+
+        if (saccEditandoId) {
+            await fetch(`${SUPABASE_URL}/rest/v1/saccs?id=eq.${saccEditandoId}`, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ contrato, objeto, numero_sacc, categoria })
+            });
+            saccEditandoId = null;
+            const btn = document.querySelector('#tab-sacc .btn-salvar');
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar SACC';
+            btn.style.background = '';
+            mostrarMensagem('msg-sacc', 'SACC atualizado com sucesso!', 'sucesso');
+        } else {
+            await post('saccs', { contrato, objeto, numero_sacc, categoria });
+            mostrarMensagem('msg-sacc', 'SACC salvo com sucesso!', 'sucesso');
+        }
+
         document.getElementById('sacc-contrato').value = '';
         document.getElementById('sacc-objeto').value = '';
         document.getElementById('sacc-numero').value = '';
-        document.getElementById('sacc-categoria').value = 'padrao';
-        mostrarMensagem('msg-sacc', 'SACC salvo com sucesso!', 'sucesso');
+        document.getElementById('sacc-categoria').value = 'Contas Públicas';
         carregarSaccs();
     }
 
