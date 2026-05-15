@@ -436,7 +436,11 @@
     // ===================== AÇÃO =====================
 
     async function carregarAcoes() {
-        const acoes = await get('acoes?select=*,mapps(codigo)&order=codigo');
+        const acoes = await get('acoes?order=codigo');
+        const mapps = await get('mapps?order=codigo');
+        const mappsMap = {};
+        mapps.forEach(m => mappsMap[m.id] = m.codigo);
+
         const lista = document.getElementById('lista-acoes');
         const selPf = document.getElementById('pf-acao');
         const selEl = document.getElementById('el-acao');
@@ -444,7 +448,7 @@
         [selPf, selEl].forEach(sel => {
             sel.innerHTML = '<option value="">Selecione a Ação...</option>';
             acoes.forEach(a => {
-                sel.innerHTML += `<option value="${a.id}">[${a.mapps.codigo}] ${a.codigo} — ${a.descricao}</option>`;
+                sel.innerHTML += `<option value="${a.id}">[${mappsMap[a.mapp_id] || '?'}] ${a.codigo} — ${a.descricao}</option>`;
             });
         });
 
@@ -453,7 +457,7 @@
                 <div class="lista-item">
                     <div class="lista-item-info">
                         <strong>${a.codigo} — ${a.descricao}</strong>
-                        <small>MAPP: ${a.mapps.codigo}</small>
+                        <small>MAPP: ${mappsMap[a.mapp_id] || '?'}</small>
                     </div>
                     <button class="btn-excluir" onclick="excluir('acoes', ${a.id}, carregarAcoes)">
                         <i class="fa-solid fa-trash"></i> Excluir
@@ -477,14 +481,18 @@
     // ===================== PF =====================
 
     async function carregarPfs() {
-        const pfs = await get('projetos_finalisticos?select=*,acoes(codigo)&order=codigo');
+        const pfs = await get('projetos_finalisticos?order=codigo');
+        const acoes = await get('acoes?order=codigo');
+        const acoesMap = {};
+        acoes.forEach(a => acoesMap[a.id] = a.codigo);
+
         const lista = document.getElementById('lista-pfs');
         lista.innerHTML = pfs.length === 0 ? '<p style="color:#888">Nenhum PF cadastrado.</p>' :
             pfs.map(p => `
                 <div class="lista-item">
                     <div class="lista-item-info">
                         <strong>${p.codigo}</strong>
-                        <small>${p.descricao} — Ação: ${p.acoes.codigo}</small>
+                        <small>${p.descricao} — Ação: ${acoesMap[p.acao_id] || '?'}</small>
                     </div>
                     <button class="btn-excluir" onclick="excluir('projetos_finalisticos', ${p.id}, carregarPfs)">
                         <i class="fa-solid fa-trash"></i> Excluir
@@ -508,14 +516,18 @@
     // ===================== ELEMENTO =====================
 
     async function carregarElementos() {
-        const elementos = await get('elementos?select=*,acoes(codigo)&order=fonte,codigo');
+        const elementos = await get('elementos?order=fonte,codigo');
+        const acoes = await get('acoes?order=codigo');
+        const acoesMap = {};
+        acoes.forEach(a => acoesMap[a.id] = a.codigo);
+
         const lista = document.getElementById('lista-elementos');
         lista.innerHTML = elementos.length === 0 ? '<p style="color:#888">Nenhum Elemento cadastrado.</p>' :
             elementos.map(e => `
                 <div class="lista-item">
                     <div class="lista-item-info">
                         <strong>${e.codigo} — ${e.descricao}</strong> ${badgeFonte(e.fonte)}
-                        <small>Dotação: ${e.dotacao} — Ação: ${e.acoes.codigo}</small>
+                        <small>Dotação: ${e.dotacao} — Ação: ${acoesMap[e.acao_id] || '?'}</small>
                     </div>
                     <button class="btn-excluir" onclick="excluir('elementos', ${e.id}, carregarElementos)">
                         <i class="fa-solid fa-trash"></i> Excluir
