@@ -199,6 +199,7 @@
         <div class="tab" onclick="abrirTab('acao')"><i class="fa-solid fa-bolt"></i> Ação</div>
         <div class="tab" onclick="abrirTab('pf')"><i class="fa-solid fa-file-invoice"></i> PF</div>
         <div class="tab" onclick="abrirTab('elemento')"><i class="fa-solid fa-coins"></i> Elemento</div>
+        <div class="tab" onclick="abrirTab('sacc')"><i class="fa-solid fa-file-contract"></i> SACC</div>
     </div>
 
     <!-- ABA MAPP -->
@@ -330,6 +331,44 @@
         <div class="lista-section">
             <h3>Elementos cadastrados</h3>
             <div id="lista-elementos">Carregando...</div>
+        </div>
+    </div>
+
+    <!-- ABA SACC -->
+    <div class="tab-content" id="tab-sacc">
+        <div id="msg-sacc" class="mensagem"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Contrato</label>
+                <input type="text" id="sacc-contrato" placeholder="Ex: 175/2025">
+            </div>
+            <div class="form-group">
+                <label>Número SACC</label>
+                <input type="text" id="sacc-numero" placeholder="Ex: 1362720">
+            </div>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Objeto do Contrato</label>
+                <input type="text" id="sacc-objeto" placeholder="Ex: FORTAL - MÃO DE OBRA (NÍVEL SUPERIOR)">
+            </div>
+            <div class="form-group">
+                <label>Categoria (cor)</label>
+                <select id="sacc-categoria">
+                    <option value="padrao">Padrão (preto) — Mão de Obra</option>
+                    <option value="vermelho">Vermelho — Veículos/Combustível</option>
+                    <option value="verde">Verde — Alimentação/Gráfica</option>
+                    <option value="azul">Azul — Outros Serviços</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn-salvar" onclick="salvarSacc()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar SACC
+        </button>
+
+        <div class="lista-section">
+            <h3>SACCs cadastrados</h3>
+            <div id="lista-saccs">Carregando...</div>
         </div>
     </div>
 
@@ -552,6 +591,40 @@
         carregarElementos();
     }
 
+    // ===================== SACC =====================
+
+    async function carregarSaccs() {
+        const saccs = await get('saccs?order=contrato');
+        const lista = document.getElementById('lista-saccs');
+        lista.innerHTML = saccs.length === 0 ? '<p style="color:#888">Nenhum SACC cadastrado.</p>' :
+            saccs.map(s => `
+                <div class="lista-item">
+                    <div class="lista-item-info">
+                        <strong>${s.contrato} — ${s.numero_sacc}</strong>
+                        <small>${s.objeto}</small>
+                    </div>
+                    <button class="btn-excluir" onclick="excluir('saccs', ${s.id}, carregarSaccs)">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function salvarSacc() {
+        const contrato = document.getElementById('sacc-contrato').value.trim();
+        const objeto = document.getElementById('sacc-objeto').value.trim();
+        const numero_sacc = document.getElementById('sacc-numero').value.trim();
+        const categoria = document.getElementById('sacc-categoria').value;
+        if (!contrato || !objeto || !numero_sacc) return mostrarMensagem('msg-sacc', 'Preencha todos os campos.', 'erro');
+        await post('saccs', { contrato, objeto, numero_sacc, categoria });
+        document.getElementById('sacc-contrato').value = '';
+        document.getElementById('sacc-objeto').value = '';
+        document.getElementById('sacc-numero').value = '';
+        document.getElementById('sacc-categoria').value = 'padrao';
+        mostrarMensagem('msg-sacc', 'SACC salvo com sucesso!', 'sucesso');
+        carregarSaccs();
+    }
+
     // ===================== EXCLUIR =====================
 
     async function excluir(tabela, id, callback) {
@@ -570,6 +643,7 @@
         await carregarAcoes();
         await carregarPfs();
         await carregarElementos();
+        await carregarSaccs();
     }
 
     init();
