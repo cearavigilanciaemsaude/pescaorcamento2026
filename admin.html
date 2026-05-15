@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pesca do Orçamento SEVIG 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style1.css">
+    <style>
+        .admin-header {
+            background: var(--cor-primaria);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .admin-header h1 { font-size: 1.6rem; }
+        .admin-header p { font-size: 0.9rem; opacity: 0.85; margin-top: 4px; }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin: 24px 0 0 0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 8px 8px 0 0;
+            background: white;
+            color: var(--cor-primaria);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border-bottom: none;
+        }
+
+        .tab.ativo {
+            background: var(--cor-primaria);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 0 8px 8px 8px;
+            padding: 24px;
+            background: white;
+            margin-bottom: 30px;
+        }
+
+        .tab-content.ativo { display: block; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-grid.full { grid-template-columns: 1fr; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--cor-primaria);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 9px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--cor-primaria);
+        }
+
+        .btn-salvar {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-salvar:hover { background: #0a5a43; }
+
+        .btn-salvar:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .lista-section {
+            margin-top: 30px;
+        }
+
+        .lista-section h3 {
+            color: var(--cor-primaria);
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--cor-primaria);
+            padding-bottom: 6px;
+        }
+
+        .lista-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: #fafafa;
+            gap: 10px;
+        }
+
+        .lista-item-info { flex: 1; }
+        .lista-item-info strong { color: var(--cor-primaria); }
+        .lista-item-info small { color: #888; display: block; }
+
+        .btn-excluir {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-excluir:hover { background: #c0392b; }
+
+        .mensagem {
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .mensagem.sucesso { background: #d4edda; color: #155724; display: block; }
+        .mensagem.erro { background: #f8d7da; color: #721c24; display: block; }
+
+        .badge-fonte {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .badge-1600 { background: #d4edda; color: #0F7B5B; }
+        .badge-1500 { background: #d0e8f5; color: #2980b9; }
+        .badge-1659 { background: #fde8e8; color: #c0392b; }
+        .badge-2600 { background: #d4f5db; color: #02551a; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-header">
+    <h1><i class="fa-solid fa-gear"></i> Administração — Pesca do Orçamento SEVIG 2026</h1>
+    <p>Cadastro e gerenciamento de MAPPs, Ações, PFs e Elementos</p>
+</div>
+
+<main class="container">
+
+    <div class="navegacao" style="margin-top:20px;">
+        <a href="index.html" class="btn btn-secundario">← Voltar ao início</a>
+    </div>
+
+    <div class="tabs">
+        <div class="tab ativo" onclick="abrirTab('mapp')"><i class="fa-solid fa-layer-group"></i> MAPP</div>
+        <div class="tab" onclick="abrirTab('acao')"><i class="fa-solid fa-bolt"></i> Ação</div>
+        <div class="tab" onclick="abrirTab('pf')"><i class="fa-solid fa-file-invoice"></i> PF</div>
+        <div class="tab" onclick="abrirTab('elemento')"><i class="fa-solid fa-coins"></i> Elemento</div>
+    </div>
+
+    <!-- ABA MAPP -->
+    <div class="tab-content ativo" id="tab-mapp">
+        <div id="msg-mapp" class="mensagem"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Código do MAPP</label>
+                <input type="text" id="mapp-codigo" placeholder="Ex: 240954">
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <input type="text" id="mapp-descricao" placeholder="Ex: CONTROLE SANITÁRIO...">
+            </div>
+        </div>
+        <button class="btn-salvar" onclick="salvarMapp()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar MAPP
+        </button>
+
+        <div class="lista-section">
+            <h3>MAPPs cadastrados</h3>
+            <div id="lista-mapps">Carregando...</div>
+        </div>
+    </div>
+
+    <!-- ABA AÇÃO -->
+    <div class="tab-content" id="tab-acao">
+        <div id="msg-acao" class="mensagem"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>MAPP</label>
+                <select id="acao-mapp">
+                    <option value="">Selecione o MAPP...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Código da Ação</label>
+                <input type="text" id="acao-codigo" placeholder="Ex: 20624">
+            </div>
+        </div>
+        <div class="form-grid full">
+            <div class="form-group">
+                <label>Descrição da Ação</label>
+                <input type="text" id="acao-descricao" placeholder="Ex: PROMOÇÃO DO DESENVOLVIMENTO...">
+            </div>
+        </div>
+        <button class="btn-salvar" onclick="salvarAcao()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Ação
+        </button>
+
+        <div class="lista-section">
+            <h3>Ações cadastradas</h3>
+            <div id="lista-acoes">Carregando...</div>
+        </div>
+    </div>
+
+    <!-- ABA PF -->
+    <div class="tab-content" id="tab-pf">
+        <div id="msg-pf" class="mensagem"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Ação</label>
+                <select id="pf-acao">
+                    <option value="">Selecione a Ação...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Código do PF</label>
+                <input type="text" id="pf-codigo" placeholder="Ex: 2404010622024C">
+            </div>
+        </div>
+        <div class="form-grid full">
+            <div class="form-group">
+                <label>Descrição do PF</label>
+                <input type="text" id="pf-descricao" placeholder="Ex: PAGAMENTO DE PASSAGENS E DIÁRIAS...">
+            </div>
+        </div>
+        <button class="btn-salvar" onclick="salvarPf()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar PF
+        </button>
+
+        <div class="lista-section">
+            <h3>PFs cadastrados</h3>
+            <div id="lista-pfs">Carregando...</div>
+        </div>
+    </div>
+
+    <!-- ABA ELEMENTO -->
+    <div class="tab-content" id="tab-elemento">
+        <div id="msg-elemento" class="mensagem"></div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Ação</label>
+                <select id="el-acao">
+                    <option value="">Selecione a Ação...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Código do Elemento</label>
+                <input type="text" id="el-codigo" placeholder="Ex: 339014">
+            </div>
+        </div>
+        <div class="form-grid full">
+            <div class="form-group">
+                <label>Descrição do Elemento</label>
+                <input type="text" id="el-descricao" placeholder="Ex: Diárias Civil">
+            </div>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Fonte</label>
+                <select id="el-fonte">
+                    <option value="">Selecione a Fonte...</option>
+                    <option value="1.600">1.600 — Despesa Corrente</option>
+                    <option value="1.500">1.500 — Tesouro do Estado</option>
+                    <option value="1.659">1.659 — Fonte Própria</option>
+                    <option value="2.600">2.600 — Superávit</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Dotação</label>
+                <input type="text" id="el-dotacao" placeholder="Ex: 22285">
+            </div>
+        </div>
+        <button class="btn-salvar" onclick="salvarElemento()">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Elemento
+        </button>
+
+        <div class="lista-section">
+            <h3>Elementos cadastrados</h3>
+            <div id="lista-elementos">Carregando...</div>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="container">
+        &copy; 2026 - Junior Alcantara
+    </div>
+</footer>
+
+<script>
+    const SUPABASE_URL = 'https://uezaqoalbxbyzaimxpsb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_qDXNQda0NJkk1H60uaYG6A_4oOVF8yz';
+
+    // ===================== UTILS =====================
+
+    async function get(endpoint) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        return res.json();
+    }
+
+    async function post(tabela, dados) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${tabela}`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(dados)
+        });
+        return res.json();
+    }
+
+    async function del(tabela, id) {
+        await fetch(`${SUPABASE_URL}/rest/v1/${tabela}?id=eq.${id}`, {
+            method: 'DELETE',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+    }
+
+    function mostrarMensagem(id, texto, tipo) {
+        const el = document.getElementById(id);
+        el.textContent = texto;
+        el.className = `mensagem ${tipo}`;
+        setTimeout(() => { el.className = 'mensagem'; }, 4000);
+    }
+
+    function badgeFonte(fonte) {
+        const cls = fonte === '1.600' ? 'badge-1600' : fonte === '1.500' ? 'badge-1500' : fonte === '1.659' ? 'badge-1659' : 'badge-2600';
+        return `<span class="badge-fonte ${cls}">${fonte}</span>`;
+    }
+
+    // ===================== TABS =====================
+
+    function abrirTab(nome) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativo'));
+        event.target.closest('.tab').classList.add('ativo');
+        document.getElementById(`tab-${nome}`).classList.add('ativo');
+    }
+
+    // ===================== MAPP =====================
+
+    async function carregarMapps() {
+        const mapps = await get('mapps?order=codigo');
+        const lista = document.getElementById('lista-mapps');
+        const selAcao = document.getElementById('acao-mapp');
+
+        selAcao.innerHTML = '<option value="">Selecione o MAPP...</option>';
+        mapps.forEach(m => {
+            selAcao.innerHTML += `<option value="${m.id}">${m.codigo} — ${m.descricao}</option>`;
+        });
+
+        lista.innerHTML = mapps.length === 0 ? '<p style="color:#888">Nenhum MAPP cadastrado.</p>' :
+            mapps.map(m => `
+                <div class="lista-item">
+                    <div class="lista-item-info">
+                        <strong>${m.codigo}</strong>
+                        <small>${m.descricao}</small>
+                    </div>
+                    <button class="btn-excluir" onclick="excluir('mapps', ${m.id}, carregarMapps)">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function salvarMapp() {
+        const codigo = document.getElementById('mapp-codigo').value.trim();
+        const descricao = document.getElementById('mapp-descricao').value.trim();
+        if (!codigo || !descricao) return mostrarMensagem('msg-mapp', 'Preencha todos os campos.', 'erro');
+        await post('mapps', { codigo, descricao });
+        document.getElementById('mapp-codigo').value = '';
+        document.getElementById('mapp-descricao').value = '';
+        mostrarMensagem('msg-mapp', 'MAPP salvo com sucesso!', 'sucesso');
+        carregarMapps();
+    }
+
+    // ===================== AÇÃO =====================
+
+    async function carregarAcoes() {
+        const acoes = await get('acoes?select=*,mapps(codigo)&order=codigo');
+        const lista = document.getElementById('lista-acoes');
+        const selPf = document.getElementById('pf-acao');
+        const selEl = document.getElementById('el-acao');
+
+        [selPf, selEl].forEach(sel => {
+            sel.innerHTML = '<option value="">Selecione a Ação...</option>';
+            acoes.forEach(a => {
+                sel.innerHTML += `<option value="${a.id}">[${a.mapps.codigo}] ${a.codigo} — ${a.descricao}</option>`;
+            });
+        });
+
+        lista.innerHTML = acoes.length === 0 ? '<p style="color:#888">Nenhuma Ação cadastrada.</p>' :
+            acoes.map(a => `
+                <div class="lista-item">
+                    <div class="lista-item-info">
+                        <strong>${a.codigo} — ${a.descricao}</strong>
+                        <small>MAPP: ${a.mapps.codigo}</small>
+                    </div>
+                    <button class="btn-excluir" onclick="excluir('acoes', ${a.id}, carregarAcoes)">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function salvarAcao() {
+        const mapp_id = document.getElementById('acao-mapp').value;
+        const codigo = document.getElementById('acao-codigo').value.trim();
+        const descricao = document.getElementById('acao-descricao').value.trim();
+        if (!mapp_id || !codigo || !descricao) return mostrarMensagem('msg-acao', 'Preencha todos os campos.', 'erro');
+        await post('acoes', { mapp_id, codigo, descricao });
+        document.getElementById('acao-codigo').value = '';
+        document.getElementById('acao-descricao').value = '';
+        mostrarMensagem('msg-acao', 'Ação salva com sucesso!', 'sucesso');
+        carregarAcoes();
+    }
+
+    // ===================== PF =====================
+
+    async function carregarPfs() {
+        const pfs = await get('projetos_finalisticos?select=*,acoes(codigo)&order=codigo');
+        const lista = document.getElementById('lista-pfs');
+        lista.innerHTML = pfs.length === 0 ? '<p style="color:#888">Nenhum PF cadastrado.</p>' :
+            pfs.map(p => `
+                <div class="lista-item">
+                    <div class="lista-item-info">
+                        <strong>${p.codigo}</strong>
+                        <small>${p.descricao} — Ação: ${p.acoes.codigo}</small>
+                    </div>
+                    <button class="btn-excluir" onclick="excluir('projetos_finalisticos', ${p.id}, carregarPfs)">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function salvarPf() {
+        const acao_id = document.getElementById('pf-acao').value;
+        const codigo = document.getElementById('pf-codigo').value.trim();
+        const descricao = document.getElementById('pf-descricao').value.trim();
+        if (!acao_id || !codigo || !descricao) return mostrarMensagem('msg-pf', 'Preencha todos os campos.', 'erro');
+        await post('projetos_finalisticos', { acao_id, codigo, descricao });
+        document.getElementById('pf-codigo').value = '';
+        document.getElementById('pf-descricao').value = '';
+        mostrarMensagem('msg-pf', 'PF salvo com sucesso!', 'sucesso');
+        carregarPfs();
+    }
+
+    // ===================== ELEMENTO =====================
+
+    async function carregarElementos() {
+        const elementos = await get('elementos?select=*,acoes(codigo)&order=fonte,codigo');
+        const lista = document.getElementById('lista-elementos');
+        lista.innerHTML = elementos.length === 0 ? '<p style="color:#888">Nenhum Elemento cadastrado.</p>' :
+            elementos.map(e => `
+                <div class="lista-item">
+                    <div class="lista-item-info">
+                        <strong>${e.codigo} — ${e.descricao}</strong> ${badgeFonte(e.fonte)}
+                        <small>Dotação: ${e.dotacao} — Ação: ${e.acoes.codigo}</small>
+                    </div>
+                    <button class="btn-excluir" onclick="excluir('elementos', ${e.id}, carregarElementos)">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function salvarElemento() {
+        const acao_id = document.getElementById('el-acao').value;
+        const codigo = document.getElementById('el-codigo').value.trim();
+        const descricao = document.getElementById('el-descricao').value.trim();
+        const fonte = document.getElementById('el-fonte').value;
+        const dotacao = document.getElementById('el-dotacao').value.trim();
+        if (!acao_id || !codigo || !descricao || !fonte || !dotacao) return mostrarMensagem('msg-elemento', 'Preencha todos os campos.', 'erro');
+        await post('elementos', { acao_id, codigo, descricao, fonte, dotacao });
+        document.getElementById('el-codigo').value = '';
+        document.getElementById('el-descricao').value = '';
+        document.getElementById('el-fonte').value = '';
+        document.getElementById('el-dotacao').value = '';
+        mostrarMensagem('msg-elemento', 'Elemento salvo com sucesso!', 'sucesso');
+        carregarElementos();
+    }
+
+    // ===================== EXCLUIR =====================
+
+    async function excluir(tabela, id, callback) {
+        if (!confirm('Tem certeza que deseja excluir este item?')) return;
+        await del(tabela, id);
+        callback();
+        // Recarregar selects de ações se necessário
+        if (tabela === 'mapps') carregarMapps();
+        if (tabela === 'acoes') carregarAcoes();
+    }
+
+    // ===================== INIT =====================
+
+    async function init() {
+        await carregarMapps();
+        await carregarAcoes();
+        await carregarPfs();
+        await carregarElementos();
+    }
+
+    init();
+</script>
+
+</body>
+</html>
