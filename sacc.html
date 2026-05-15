@@ -10,7 +10,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
         .filtro-container label {
@@ -24,14 +24,40 @@
             font-size: 0.95rem;
             outline: none;
             transition: border-color 0.2s;
-            width: 280px;
+            width: 260px;
         }
         .filtro-container input:focus { border-color: var(--cor-secundaria); }
-        #contador-saccs { font-size: 0.85rem; color: #888; margin-left: auto; }
-        .cat-vermelho { color: red; font-weight: bold; }
-        .cat-verde { color: green; font-weight: bold; }
-        .cat-azul { color: blue; font-weight: bold; }
-        .cat-padrao { color: black; font-weight: bold; }
+        .filtro-cats {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-cat {
+            padding: 6px 14px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 20px;
+            background: white;
+            color: var(--cor-primaria);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+        .btn-cat.ativo {
+            background: var(--cor-primaria);
+            color: white;
+        }
+        #contador-saccs { font-size: 0.85rem; color: #888; }
+        .categoria-titulo {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 8px 14px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-top: 20px;
+            border-radius: 6px 6px 0 0;
+        }
+        .categoria-titulo:first-child { margin-top: 0; }
     </style>
 </head>
 <body>
@@ -53,24 +79,22 @@
 
         <div class="filtro-container">
             <label>Pesquisar:</label>
-            <input type="text" id="filtro-texto" placeholder="Contrato, objeto ou número SACC..." oninput="filtrar()">
+            <input type="text" id="filtro-texto" placeholder="Contrato, objeto ou SACC..." oninput="filtrar()">
+            <div class="filtro-cats">
+                <button class="btn-cat ativo" id="btn-todos" onclick="filtrarCat('')">Todos</button>
+                <button class="btn-cat" onclick="filtrarCat('Contas Públicas')">Contas Públicas</button>
+                <button class="btn-cat" onclick="filtrarCat('Despesas com Veículos')">Veículos</button>
+                <button class="btn-cat" onclick="filtrarCat('Terceirização')">Terceirização</button>
+                <button class="btn-cat" onclick="filtrarCat('Cooperativa')">Cooperativa</button>
+                <button class="btn-cat" onclick="filtrarCat('Outros')">Outros</button>
+            </div>
             <span id="contador-saccs"></span>
         </div>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Contrato</th>
-                        <th>Objeto Contrato</th>
-                        <th>SACC</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-saccs">
-                    <tr><td colspan="3">Carregando...</td></tr>
-                </tbody>
-            </table>
+        <div id="conteudo-saccs">
+            <p>Carregando...</p>
         </div>
+
     </section>
 
 </main>
@@ -86,6 +110,9 @@
     const SUPABASE_KEY = 'sb_publishable_qDXNQda0NJkk1H60uaYG6A_4oOVF8yz';
 
     let todosSaccs = [];
+    let catAtiva = '';
+
+    const ORDEM_CATS = ['Contas Públicas', 'Despesas com Veículos', 'Terceirização', 'Cooperativa', 'Outros'];
 
     async function get(endpoint) {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
@@ -94,31 +121,85 @@
         return res.json();
     }
 
+    function filtrarCat(cat) {
+        catAtiva = cat;
+        document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('ativo'));
+        if (cat === '') {
+            document.getElementById('btn-todos').classList.add('ativo');
+        } else {
+            document.querySelectorAll('.btn-cat').forEach(b => {
+                if (b.textContent.trim() === cat || 
+                    (cat === 'Despesas com Veículos' && b.textContent.trim() === 'Veículos')) {
+                    b.classList.add('ativo');
+                }
+            });
+        }
+        filtrar();
+    }
+
     function filtrar() {
         const texto = document.getElementById('filtro-texto').value.toLowerCase();
-        const tb = document.getElementById('tabela-saccs');
-        const filtrados = todosSaccs.filter(s =>
-            `${s.contrato} ${s.objeto} ${s.numero_sacc}`.toLowerCase().includes(texto)
-        );
-        tb.innerHTML = filtrados.length === 0
-            ? '<tr><td colspan="3">Nenhum SACC encontrado.</td></tr>'
-            : filtrados.map(s => {
-                const cls = "";
-                return `<tr>
-                    <td>${s.contrato}</td>
-                    <td>${s.objeto}</td>
-                    <td><strong>${s.numero_sacc}</strong></td>
-                </tr>`;
-            }).join('');
+        const conteudo = document.getElementById('conteudo-saccs');
+
+        let filtrados = todosSaccs.filter(s => {
+            const matchCat = catAtiva === '' || s.categoria === catAtiva;
+            const matchTexto = texto === '' || `${s.contrato} ${s.objeto} ${s.numero_sacc}`.toLowerCase().includes(texto);
+            return matchCat && matchTexto;
+        });
+
         document.getElementById('contador-saccs').textContent = `${filtrados.length} de ${todosSaccs.length} registros`;
+
+        if (filtrados.length === 0) {
+            conteudo.innerHTML = '<p style="color:#888">Nenhum SACC encontrado.</p>';
+            return;
+        }
+
+        // Agrupar por categoria
+        const grupos = {};
+        filtrados.forEach(s => {
+            const cat = s.categoria || 'Outros';
+            if (!grupos[cat]) grupos[cat] = [];
+            grupos[cat].push(s);
+        });
+
+        // Ordenar categorias
+        const catsOrdenadas = ORDEM_CATS.filter(c => grupos[c]);
+        const catsExtra = Object.keys(grupos).filter(c => !ORDEM_CATS.includes(c));
+
+        let html = '';
+        [...catsOrdenadas, ...catsExtra].forEach(cat => {
+            html += `<div class="categoria-titulo"><i class="fa-solid fa-tag"></i> ${cat}</div>`;
+            html += `<div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Contrato</th>
+                            <th>Objeto Contrato</th>
+                            <th>SACC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${grupos[cat].map(s => `
+                            <tr>
+                                <td>${s.contrato}</td>
+                                <td>${s.objeto}</td>
+                                <td><strong>${s.numero_sacc}</strong></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+        });
+
+        conteudo.innerHTML = html;
     }
 
     async function carregar() {
         try {
-            todosSaccs = await get('saccs?order=contrato');
+            todosSaccs = await get('saccs?order=categoria,contrato');
             filtrar();
         } catch (err) {
-            document.getElementById('tabela-saccs').innerHTML = '<tr><td colspan="3" style="color:red;">Erro ao carregar dados.</td></tr>';
+            document.getElementById('conteudo-saccs').innerHTML = '<p style="color:red;">Erro ao carregar dados.</p>';
         }
     }
 
