@@ -4,13 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orçamento SEVIG 2026</title>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-
-    <!-- CSS Global -->
     <link rel="stylesheet" href="style1.css">
+    <style>
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.ativo { display: flex; }
+        .modal-box {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-box h3 {
+            color: var(--cor-primaria);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        .modal-box p {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .modal-box input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--cor-primaria);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 12px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .modal-box input:focus { border-color: var(--cor-secundaria); }
+        .modal-btns { display: flex; gap: 8px; }
+        .modal-btns button { flex: 1; }
+        .msg-erro {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: none;
+        }
+        .msg-erro.ativo { display: block; }
+        .card-admin {
+            border: 2px dashed var(--cor-primaria) !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -71,7 +121,12 @@
         <a href="entreDatas.html" class="card">
             <i class="fa-solid fa-calculator"></i>
             <span>Calculadora de Datas</span>
-        </a>    
+        </a>
+
+        <a href="#" class="card card-admin" onclick="abrirAdmin(event)">
+            <i class="fa-solid fa-lock"></i>
+            <span>Admin</span>
+        </a>
 
     </section>
 
@@ -82,6 +137,50 @@
         &copy; 2026 - Junior Alcantara
     </div>
 </footer>
+
+<!-- MODAL SENHA -->
+<div class="modal-overlay" id="modal-admin">
+    <div class="modal-box">
+        <h3><i class="fa-solid fa-lock"></i> Área Restrita</h3>
+        <p>Digite a senha para acessar o painel de administração</p>
+        <p class="msg-erro" id="msg-erro-senha">Senha incorreta. Tente novamente.</p>
+        <input type="password" id="input-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter') confirmarSenha()">
+        <div class="modal-btns">
+            <button class="btn btn-secundario" onclick="fecharModal()">Cancelar</button>
+            <button class="btn btn-primario" onclick="confirmarSenha()">Entrar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirAdmin(e) {
+        e.preventDefault();
+        document.getElementById('modal-admin').classList.add('ativo');
+        document.getElementById('input-senha').value = '';
+        document.getElementById('msg-erro-senha').classList.remove('ativo');
+        setTimeout(() => document.getElementById('input-senha').focus(), 100);
+    }
+
+    function fecharModal() {
+        document.getElementById('modal-admin').classList.remove('ativo');
+    }
+
+    function confirmarSenha() {
+        const senha = document.getElementById('input-senha').value;
+        if (senha === 'Jr@310876') {
+            window.location.href = 'admin.html';
+        } else {
+            document.getElementById('msg-erro-senha').classList.add('ativo');
+            document.getElementById('input-senha').value = '';
+            document.getElementById('input-senha').focus();
+        }
+    }
+
+    // Fechar ao clicar fora
+    document.getElementById('modal-admin').addEventListener('click', function(e) {
+        if (e.target === this) fecharModal();
+    });
+</script>
 
 </body>
 </html>
