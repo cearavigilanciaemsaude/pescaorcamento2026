@@ -48,6 +48,9 @@
             padding: 24px;
             background: white;
             margin-bottom: 30px;
+            box-sizing: border-box;
+            width: 100%;
+            overflow: hidden;
         }
 
         .tab-content.ativo { display: block; }
@@ -57,6 +60,8 @@
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-bottom: 16px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .form-grid.full { grid-template-columns: 1fr; }
@@ -65,6 +70,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-width: 0;
         }
 
         .form-group label {
@@ -81,6 +87,8 @@
             font-size: 0.95rem;
             outline: none;
             transition: border-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .form-group input:focus,
@@ -228,13 +236,15 @@
     <!-- ABA AÇÃO -->
     <div class="tab-content" id="tab-acao">
         <div id="msg-acao" class="mensagem"></div>
-        <div class="form-grid">
+        <div class="form-grid full">
             <div class="form-group">
                 <label>MAPP</label>
                 <select id="acao-mapp">
                     <option value="">Selecione o MAPP...</option>
                 </select>
             </div>
+        </div>
+        <div class="form-grid full">
             <div class="form-group">
                 <label>Código da Ação</label>
                 <input type="text" id="acao-codigo" placeholder="Ex: 20624">
@@ -259,13 +269,15 @@
     <!-- ABA PF -->
     <div class="tab-content" id="tab-pf">
         <div id="msg-pf" class="mensagem"></div>
-        <div class="form-grid">
+        <div class="form-grid full">
             <div class="form-group">
                 <label>Ação</label>
                 <select id="pf-acao">
                     <option value="">Selecione a Ação...</option>
                 </select>
             </div>
+        </div>
+        <div class="form-grid full">
             <div class="form-group">
                 <label>Código do PF</label>
                 <input type="text" id="pf-codigo" placeholder="Ex: 2404010622024C">
@@ -290,25 +302,19 @@
     <!-- ABA ELEMENTO -->
     <div class="tab-content" id="tab-elemento">
         <div id="msg-elemento" class="mensagem"></div>
-        <div class="form-grid">
+        <div class="form-grid full">
             <div class="form-group">
                 <label>Ação</label>
                 <select id="el-acao">
                     <option value="">Selecione a Ação...</option>
                 </select>
             </div>
+        </div>
+        <div class="form-grid">
             <div class="form-group">
                 <label>Código do Elemento</label>
                 <input type="text" id="el-codigo" placeholder="Ex: 339014">
             </div>
-        </div>
-        <div class="form-grid full">
-            <div class="form-group">
-                <label>Descrição do Elemento</label>
-                <input type="text" id="el-descricao" placeholder="Ex: Diárias Civil">
-            </div>
-        </div>
-        <div class="form-grid">
             <div class="form-group">
                 <label>Fonte</label>
                 <select id="el-fonte">
@@ -319,6 +325,14 @@
                     <option value="2.600">2.600 — Superávit</option>
                 </select>
             </div>
+        </div>
+        <div class="form-grid full">
+            <div class="form-group">
+                <label>Descrição do Elemento</label>
+                <input type="text" id="el-descricao" placeholder="Ex: Diárias Civil">
+            </div>
+        </div>
+        <div class="form-grid full">
             <div class="form-group">
                 <label>Dotação</label>
                 <input type="text" id="el-dotacao" placeholder="Ex: 22285">
